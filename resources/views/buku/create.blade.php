@@ -21,11 +21,16 @@
               <option value="Biografi">Biografi</option>
             </select>
           </div>
+          
           <div class="mb-3">
             <label for="sampul" class="form-label">Sampul Buku</label>
-            <img class="img-preview img-fluid mb-3" width="250px">
-            <input class="form-control" type="file" id="sampul" name="sampul" onchange="previewImage()" required>
+            <div class="border p-3 text-center" id="drop-zone" style="border-radius: 10px;">
+              <p>Drag & drop file di sini atau klik untuk memilih file</p>
+              <input class="form-control" type="file" id="sampul" name="sampul" onchange="previewImage(event)" required style="display: none;">
+              <img id="img-preview" class="img-fluid my-3" width="250px" alt="Preview" style="display: none;">
+            </div>
           </div>
+          
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
       </div>
@@ -33,18 +38,40 @@
   </div>
 
   <script>
-    function previewImage() {
-      const image = document.querySelector('#sampul');
-      const imagePreview = document.querySelector('.img-preview');
-      
-      imagePreview.style.display = 'block';
-      
-      const oFReader = new FileReader();
-      oFReader.readAsDataURL(image.files[0]);
-      
-      oFReader.onload = function (oFREvent) {
-        imagePreview.src = oFREvent.target.result;
+    const dropZone = document.getElementById('drop-zone');
+    const sampulInput = document.getElementById('sampul');
+    const imgPreview = document.getElementById('img-preview');
+
+    dropZone.addEventListener('click', () => {
+      sampulInput.click();
+    });
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-primary');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-primary');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-primary');
+      const files = e.dataTransfer.files;
+      if (files.length) {
+        sampulInput.files = files;
+        previewImage({ target: sampulInput });
+      }
+    });
+
+    function previewImage(event) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        imgPreview.src = reader.result;
+        imgPreview.style.display = 'block';
       };
+      reader.readAsDataURL(event.target.files[0]);
     }
   </script>
 </x-layout>
