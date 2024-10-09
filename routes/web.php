@@ -11,9 +11,9 @@ Route::get('/', function () {
 Route::get('/admin', function () {
     return view('admin/dashboard');
 });
-Route::get('/buku', function () {
-    return view('buku/index');
-});
+// Route::get('/buku', function () {
+//     return view('buku/index');
+// });
 // Route::get('/buku/tambah-buku', function () {
 //     return view('buku/create');
 // });
